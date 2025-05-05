@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Colegio Brasilia Bosa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4faff;
+        }
+
+        header {
+            background-color: #003366;
+            color: white;
+            padding: 1em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.6em;
+        }
+
+        .logo {
+            height: 60px;
+        }
+
+        nav {
+            background-color: #007BFF;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            padding: 1em 1.5em;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-right: 1px solid white;
+            transition: background-color 0.3s;
+        }
+
+        nav a:last-child {
+            border-right: none;
+        }
+
+        nav a:hover {
+            background-color: #00BFA6;
+        }
+
+        section {
+            padding: 2em;
+            background-color: white;
+        }
+
+        h2 {
+            color: #003366;
+        }
+
+        ul {
+            list-style-type: square;
+        }
+
+        a.archivo {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        a.archivo:hover {
+            color: #00BFA6;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .logo {
+                margin-top: 10px;
+                height: 50px;
+            }
+
+            nav {
+                flex-direction: column;
+            }
+
+            nav a {
+                border-right: none;
+                border-bottom: 1px solid white;
+            }
+
+            nav a:last-child {
+                border-bottom: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Colegio Brasilia Bosa</h1>
+        <img src="{{ url_for('static', filename='escudo.png') }}" alt="Escudo del colegio" class="logo" />
+    </header>
+
+    <nav>
+        {% for clave, nombre in secciones.items() %}
+            <a href="#{{ clave }}" onclick="mostrar('{{ clave }}')">{{ nombre }}</a>
+        {% endfor %}
+    </nav>
+
+    <section id="contenido">
+        {% for clave, nombre in secciones.items() %}
+        <div id="{{ clave }}" style="{% if loop.first %}display:block;{% else %}display:none;{% endif %}">
+            <h2>{{ nombre }}</h2>
+            {% if archivos[clave] %}
+                <ul>
+                    {% for archivo in archivos[clave] %}
+                    <li><a href="{{ url_for('descargar', seccion=clave, archivo=archivo) }}" class="archivo" download>{{ archivo }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No hay archivos disponibles aún.</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </section>
+
+    <script>
+        function mostrar(seccion) {
+            const secciones = {{ secciones | tojson }};
+            for (const id in secciones) {
+                document.getElementById(id).style.display = 'none';
+            }
+            document.getElementById(seccion).style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
