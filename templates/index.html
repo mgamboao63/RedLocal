@@ -122,7 +122,9 @@
             {% if archivos[clave] %}
                 <ul>
                     {% for archivo in archivos[clave] %}
-                    <li><a href="{{ url_for('descargar', seccion=clave, archivo=archivo) }}" class="archivo" download>{{ archivo }}</a></li>
+                    <li>
+                        <a href="{{ url_for('static', filename=clave + '/' + archivo) }}" class="archivo" download>{{ archivo }}</a>
+                    </li>
                     {% endfor %}
                 </ul>
             {% else %}
