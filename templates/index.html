@@ -113,6 +113,7 @@
         {% for clave, nombre in secciones.items() %}
             <a href="#{{ clave }}" onclick="mostrar('{{ clave }}')">{{ nombre }}</a>
         {% endfor %}
+        <a href="#lab_r" onclick="mostrar('lab_r')">Laboratorio R</a>
     </nav>
 
     <section id="contenido">
@@ -122,9 +123,7 @@
             {% if archivos[clave] %}
                 <ul>
                     {% for archivo in archivos[clave] %}
-                    <li>
-                        <a href="{{ url_for('static', filename=clave + '/' + archivo) }}" class="archivo" download>{{ archivo }}</a>
-                    </li>
+                    <li><a href="{{ url_for('descargar', seccion=clave, archivo=archivo) }}" class="archivo" download>{{ archivo }}</a></li>
                     {% endfor %}
                 </ul>
             {% else %}
@@ -132,6 +131,11 @@
             {% endif %}
         </div>
         {% endfor %}
+
+        <div id="lab_r" style="display:none;">
+            <h2>Laboratorio R interactivo</h2>
+            <iframe src="http://192.168.1.101:3838" width="100%" height="700" frameborder="0"></iframe>
+        </div>
     </section>
 
     <script>
@@ -140,7 +144,10 @@
             for (const id in secciones) {
                 document.getElementById(id).style.display = 'none';
             }
-            document.getElementById(seccion).style.display = 'block';
+            document.getElementById('lab_r').style.display = 'none';
+            if (document.getElementById(seccion)) {
+                document.getElementById(seccion).style.display = 'block';
+            }
         }
     </script>
 
